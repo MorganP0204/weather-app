@@ -1,28 +1,22 @@
 function updateWeather(response) {
-  // update weather details:
   console.log(response.data);
-  let temperature = response.data.temperature.current;
-  // update temperature
   let currentTemperature = document.querySelector("#weather-app-temperature");
-  currentTemperature.innerHTML = Math.round(temperature);
-
-  // update city
+  let temperature = response.data.temperature.current;
   let city = document.querySelector("#weather-app-city");
-  city.innerHTML = response.data.city;
-
-  // update condition
   let conditionDescription = document.querySelector("#condition-description");
-  conditionDescription.innerHTML = response.data.condition.description;
-
-  // update humidity & wind
+  let condition = response.data.condition;
   let currentHumidity = document.querySelector("#humidity");
   let currentWind = document.querySelector("#wind");
-  currentHumidity.innerHTML = `${response.data.temperature.humidity}%`;
-  currentWind.innerHTML = `${response.data.wind.speed}km/h`;
-
-  // update date
   let currentDate = document.querySelector("#date");
   let date = new Date(response.data.time * 1000);
+  let currentIcon = document.querySelector("#icon");
+
+  currentIcon.innerHTML = `<img src="${response.data.condition.icon_url}" class="weather-app-icon-image" />`;
+  currentTemperature.innerHTML = Math.round(temperature);
+  city.innerHTML = response.data.city;
+  conditionDescription.innerHTML = condition.description;
+  currentHumidity.innerHTML = `${response.data.temperature.humidity}%`;
+  currentWind.innerHTML = `${response.data.wind.speed}km/h`;
   currentDate.innerHTML = formatDate(date);
 }
 
