@@ -42,10 +42,18 @@ function formatDate(date) {
   return `${day} ${hours}:${minutes}`;
 }
 
+function formatDay(date) {
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  let day = days[date.getDay()];
+  return `${day}`;
+}
 function searchCity(city) {
   let apiKey = "c60106tff65a6314cc5047o4d15bbc2a";
   let apiURL = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
+  let forecastURL = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}`;
+
   axios.get(apiURL).then(updateWeather);
+  axios.get(forecastURL).then(updateForecast);
 }
 
 function handleSearchSubmit(event) {
@@ -57,26 +65,31 @@ function handleSearchSubmit(event) {
 let searchFormElement = document.querySelector("#search-form");
 searchFormElement.addEventListener("submit", handleSearchSubmit);
 
-function displayForecast() {
-  // insert loop of forecast days of the week, icons, and temperature (high and low)
-  let days = ["Mon", "Tues", "Wed", "Thu", "Fri"];
+function updateForecast(response) {
+  let days = response.data.daily;
+  console.log(days);
   let forecastHTML = "";
 
-  days.forEach(function (day) {
+  days.slice(1, 6).forEach(function (day) {
+    let day_of_week = formatDay(new Date(day.time * 1000));
+    let icon = `<img src="${day.condition.icon_url}" class="forecast-icon" />`;
+    let high = Math.round(day.temperature.maximum);
+    let low = Math.round(day.temperature.minimum);
+
     forecastHTML += `
         <div class="forecast-day">
-        <div class="forecast-date">${day}</div>
-        <div class="forecast-icon">☁️</div>
+        <div class="forecast-date">${day_of_week}</div>
+        <div class="forecast-icon">${icon}</div>
         <div class="forecast-temperature">
-            <strong><span class="high">19°</span></strong
-            ><span class="low"> 16°</span>
+            <strong><span class="high">${high}°</span></strong
+            ><span class="low"> ${low}°</span>
         </div>
         </div>
         `;
   });
+
   let forecast = document.querySelector("#forecast");
   forecast.innerHTML = forecastHTML;
 }
 
 searchCity("Paris");
-displayForecast();
