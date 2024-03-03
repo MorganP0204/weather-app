@@ -57,4 +57,26 @@ function handleSearchSubmit(event) {
 let searchFormElement = document.querySelector("#search-form");
 searchFormElement.addEventListener("submit", handleSearchSubmit);
 
+function displayForecast() {
+  // insert loop of forecast days of the week, icons, and temperature (high and low)
+  let days = ["Mon", "Tues", "Wed", "Thu", "Fri"];
+  let forecastHTML = "";
+
+  days.forEach(function (day) {
+    forecastHTML += `
+        <div class="forecast-day">
+        <div class="forecast-date">${day}</div>
+        <div class="forecast-icon">☁️</div>
+        <div class="forecast-temperature">
+            <strong><span class="high">19°</span></strong
+            ><span class="low"> 16°</span>
+        </div>
+        </div>
+        `;
+  });
+  let forecast = document.querySelector("#forecast");
+  forecast.innerHTML = forecastHTML;
+}
+
 searchCity("Paris");
+displayForecast();
